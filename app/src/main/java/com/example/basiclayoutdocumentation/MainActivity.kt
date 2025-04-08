@@ -9,6 +9,8 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -24,6 +26,9 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +47,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,24 +63,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BasicLayoutDocumentationTheme {
-                RowAlign()
+                FavoriteGrid()
             }
         }
     }
 }
 
-@Composable
-fun RowAlign(modifier: Modifier = Modifier) {
-
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        items(alignYourBodyData) { item ->
-            AlignYourBodyElement(item.drawable, item.text)
-        }
-    }
-}
 
 
 @Composable
@@ -103,6 +97,19 @@ fun SearchBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun RowAlign(modifier: Modifier = Modifier) {
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        items(alignYourBodyData) { item ->
+            AlignYourBodyElement(item.drawable, item.text)
+        }
+    }
+}
+
+@Composable
 fun AlignYourBodyElement(
     @DrawableRes drawable: Int,
     @StringRes text: Int,
@@ -111,19 +118,39 @@ fun AlignYourBodyElement(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
+            .width(88.dp)
+            .padding(vertical = 8.dp)
     ) {
         Image(
-            painter = painterResource(R.drawable.ab1_inversions),
+            painter = painterResource(drawable),
             contentDescription = "ICON",
-            modifier
+            contentScale = ContentScale.Crop,
+            modifier = modifier
                 .size(88.dp)
                 .clip(CircleShape)
         )
         Text(
-            stringResource(R.string.ab1_inversions),
+            stringResource(text),
             modifier = modifier.padding(top = 24.dp, bottom = 8.dp),
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+@Composable
+fun FavoriteGrid(modifier: Modifier = Modifier){
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(2),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier
+    ){
+        items(favoriteCollectionsData){ item ->
+            FavoriteCollection(
+                item.drawable, item.text,
+                modifier.height(80.dp))
+        }
     }
 }
 
@@ -133,24 +160,21 @@ fun FavoriteCollection(
     @StringRes text: Int,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    Surface(
         shape = MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        modifier = modifier.height(80.dp)
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = modifier
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.width(255.dp)
+                .height(IntrinsicSize.Min)
         ) {
             Image(
-                painter = painterResource(R.drawable.fc2_nature_meditations),
+                painter = painterResource(drawable),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
+                modifier = Modifier.size(80.dp)
                     .clip(
                         RoundedCornerShape(
                             topStart = 12.dp,
@@ -159,11 +183,9 @@ fun FavoriteCollection(
                     )
             )
             Text(
-                text = stringResource(R.string.fc2_nature_meditations),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp),
-                textAlign = TextAlign.Center
+                text = stringResource(text),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
     }
@@ -173,6 +195,6 @@ fun FavoriteCollection(
 @Composable
 fun GreetingPreview() {
     BasicLayoutDocumentationTheme {
-        RowAlign()
+        FavoriteGrid()
     }
 }
