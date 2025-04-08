@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toDrawable
 import com.example.basiclayoutdocumentation.ui.theme.BasicLayoutDocumentationTheme
 
 class MainActivity : ComponentActivity() {
@@ -54,12 +57,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BasicLayoutDocumentationTheme {
-                FavoriteCollection(
-                    text = R.string.inversions,
-                    drawable = R.drawable.screenshot_1,
-                    modifier = Modifier.padding(8.dp)
-                )
+                RowAlign()
             }
+        }
+    }
+}
+
+@Composable
+fun RowAlign(modifier: Modifier = Modifier) {
+
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        items(alignYourBodyData) { item ->
+            AlignYourBodyElement(item.drawable, item.text)
         }
     }
 }
@@ -81,7 +93,7 @@ fun SearchBar(modifier: Modifier = Modifier) {
             focusedContainerColor = MaterialTheme.colorScheme.surface
         ),
         placeholder = {
-            Text(stringResource(R.string.search))
+            Text(stringResource(R.string.placeholder_search))
         },
         modifier = modifier
             .padding(WindowInsets.safeDrawing.asPaddingValues())
@@ -101,14 +113,14 @@ fun AlignYourBodyElement(
         modifier = modifier
     ) {
         Image(
-            painter = painterResource(R.drawable.screenshot_1),
+            painter = painterResource(R.drawable.ab1_inversions),
             contentDescription = "ICON",
             modifier
                 .size(88.dp)
                 .clip(CircleShape)
         )
         Text(
-            stringResource(R.string.inversions),
+            stringResource(R.string.ab1_inversions),
             modifier = modifier.padding(top = 24.dp, bottom = 8.dp),
             style = MaterialTheme.typography.bodyMedium
         )
@@ -133,7 +145,7 @@ fun FavoriteCollection(
             modifier = Modifier.width(255.dp)
         ) {
             Image(
-                painter = painterResource(R.drawable.screenshot_1),
+                painter = painterResource(R.drawable.fc2_nature_meditations),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -147,7 +159,7 @@ fun FavoriteCollection(
                     )
             )
             Text(
-                text = stringResource(R.string.natureMeditations),
+                text = stringResource(R.string.fc2_nature_meditations),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 16.dp),
@@ -161,10 +173,6 @@ fun FavoriteCollection(
 @Composable
 fun GreetingPreview() {
     BasicLayoutDocumentationTheme {
-        FavoriteCollection(
-            text = R.string.natureMeditations,
-            drawable = R.drawable.screenshot_1,
-            modifier = Modifier.padding(8.dp)
-        )
+        RowAlign()
     }
 }
