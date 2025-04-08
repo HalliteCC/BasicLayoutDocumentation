@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">BasicLayoutDocumentation</string>
+    <string name="search">Search</string>
+    <string name="inversions">Inversions</string>
+    <string name="natureMeditations">Nature Meditations</string>
 </resources>
